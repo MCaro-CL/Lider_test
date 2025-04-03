@@ -1,11 +1,11 @@
-//
-//  HomeDomainMapperImp.swift
-//  Lider_test
-//
-//  Created by Mauricio Caro Caro on 02-04-25.
-//
+    //
+    //  HomeDomainMapperImp.swift
+    //  Lider_test
+    //
+    //  Created by Mauricio Caro Caro on 02-04-25.
+    //
 
-import Foundation
+import UIKit
 
 struct HomeDomainMapperImp: HomeDomainMapper {
     func domainToPresentation(_ value: Product) -> UiProduct {
@@ -19,11 +19,12 @@ struct HomeDomainMapperImp: HomeDomainMapper {
             rating: value.rating
         )
     }
-
+    
     func domainToPresentation(_ values: [Product]) -> [UiProduct] {
         values.map {
             domainToPresentation($0)
         }
     }
-
+    
 }
+

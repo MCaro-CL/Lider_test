@@ -40,16 +40,14 @@ final class CategoriesViewModel {
             }
         }
     }
-    
-    func didTapOnCategory(at: IndexPath) {
-        selectCategory.execute(category: categories[at.row])
-        selectCategoryNotification.onNext(())
-    }
-    
     func numbersOfCategories() -> Int {
         return categories.count
     }
     func getCategory(at: IndexPath) -> String {
         return categories[at.row]
+    }
+    func didTapOnCategory(at: IndexPath) {
+        selectCategory.execute(category: categories[at.row])
+        selectCategoryNotification.onNext(())
     }
 }

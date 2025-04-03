@@ -9,8 +9,31 @@ import UIKit
 class StandardProductCell: UICollectionViewCell {
     static let reuseIdentifier = "StandardProductCell"
     
-    private let titleLabel = UILabel()
-    private let priceLabel = UILabel()
+    private lazy var imageView: UIImageView = {
+        let img = UIImageView()
+        img.contentMode = .scaleAspectFill
+        img.clipsToBounds = true
+        img.translatesAutoresizingMaskIntoConstraints = false
+        return img
+    }()
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.textColor = .black
+        label.numberOfLines = 2
+        label.minimumScaleFactor = 0.8
+        label.adjustsFontSizeToFitWidth = true
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private lazy var priceLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 15, weight: .regular)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,26 +46,49 @@ class StandardProductCell: UICollectionViewCell {
     }
     
     private func setupViews() {
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        priceLabel.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(titleLabel)
         contentView.addSubview(priceLabel)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(imageView)
+        
+        
         
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            priceLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
-            priceLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+            priceLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            priceLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2)
+        ])
+        NSLayoutConstraint.activate([
+            titleLabel.bottomAnchor.constraint(equalTo: priceLabel.topAnchor, constant: -4),
+            titleLabel.leftAnchor.constraint(equalTo: priceLabel.leftAnchor),
+            titleLabel.rightAnchor.constraint(equalTo: priceLabel.rightAnchor),
+        ])
+        
+        NSLayoutConstraint.activate([
+            imageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -4),
+            imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
         ])
     }
     
+    
     func configure(with product: UiProduct) {
-        titleLabel.text = product.title
-        priceLabel.text = "$\(product.price)"
+        Task{
+            imageView.image = await fetchProductImage(url: product.image)
+            titleLabel.text = product.title
+            priceLabel.text = "$\(product.price)"
+        }
+    }
+    
+    private func fetchProductImage(url: String) async -> UIImage? {
+        guard let url = URL(string: url) else {
+            return nil
+        }
+        do {
+            return try await ImageDownloader.shared.downloadImage(from: url)
+        } catch {
+            print("Error al descargar la imagen: \(error.localizedDescription)")
+            return nil
+        }
     }
 }

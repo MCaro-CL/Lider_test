@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol CategorySelectionDelegate: AnyObject {
+    func didSelectCategory(_ category: String)
+}
+
 final class CategoriesViewController: BaseViewController {
     let viewModel: CategoriesViewModel
+    weak var delegate: CategorySelectionDelegate?
+    
     private lazy var titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = NSLocalizedString("CATEGORIES_TITLE", comment: "")
@@ -109,7 +115,9 @@ extension CategoriesViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedCategory = viewModel.getCategory(at: indexPath)
+        delegate?.didSelectCategory(selectedCategory)
         tableView.deselectRow(at: indexPath, animated: true)
-        viewModel.didTapOnCategory(at: indexPath)
+        self.dismiss(animated: true)
     }
 }

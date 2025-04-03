@@ -13,26 +13,32 @@ final class HomeViewModel {
     private(set) var products: [UiProduct] = []
     private(set) var filterProducts: [UiProduct] = []
     
-    private let fetchProductsUseCase: FetchProductsUseCase
-    private let fetchProductsNotification = PublishSubject<Result<(),Error>>()
-    public var fetchProductsObservable: Observable<Result<(),Error>> {
-        fetchProductsNotification.asObservable()
+    private let getProductsUseCase: GetProductsUseCase
+    private let getProductsNotification = PublishSubject<Result<(),Error>>()
+    public var getProductsObservable: Observable<Result<(),Error>> {
+        getProductsNotification.asObservable()
     }
     
-    init(fetchProductsUseCase: FetchProductsUseCase) {
-        self.fetchProductsUseCase = fetchProductsUseCase
+    private let fetchProductByCategoryUseCase: FetchProductByCategoryUseCase
+    
+    init(
+        getProductsUseCase: GetProductsUseCase,
+        fetchProductByCategoryUseCase: FetchProductByCategoryUseCase
+    ) {
+        self.getProductsUseCase = getProductsUseCase
+        self.fetchProductByCategoryUseCase = fetchProductByCategoryUseCase
     }
     
     func onSetupUI() {
         Task {
-            switch await fetchProductsUseCase.execute() {
+            switch await getProductsUseCase.execute() {
                 case .success(let products):
                     self.products = products
                     self.filterProducts = products
-                        self.fetchProductsNotification.onNext(.success(()))
+                        self.getProductsNotification.onNext(.success(()))
 
                 case .failure(let error):
-                        self.fetchProductsNotification.onNext(.failure(error))
+                        self.getProductsNotification.onNext(.failure(error))
             }
         }
     }
@@ -40,19 +46,35 @@ final class HomeViewModel {
     func itemsOn(section: Int) -> Int {
         switch section {
             case 0:
-                return products.count > 0 ? 1 : 0
+                return filterProducts.count > 0 ? 1 : 0
             case 1:
-                return products.count > 1 ? products.count : 0
+                return filterProducts.count > 1 ? filterProducts.count : 0
             default:
                 return 0
         }
     }
     
     func getFeaturedProduct() -> UiProduct? {
-        return products.max(by: { $0.rating < $1.rating })
+        return filterProducts.max(by: { $0.rating < $1.rating })
     }
     
     func getProduct(at: IndexPath) -> UiProduct {
-        self.products[at.item]
+        self.filterProducts[at.item]
+    }
+    func fetchProductsBy(category: String) {
+        if category == "Todos" {
+            filterProducts = products
+            getProductsNotification.onNext(.success(()))
+        } else {
+            Task{
+                switch await fetchProductByCategoryUseCase.execute(category: category) {
+                    case .success(let success):
+                        self.filterProducts = success
+                        self.getProductsNotification.onNext(.success(()))
+                    case .failure(let failure):
+                        self.getProductsNotification.onNext(.failure(failure))
+                }
+            }
+        }
     }
 }

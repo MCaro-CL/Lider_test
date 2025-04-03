@@ -21,7 +21,7 @@ final class HomeViewController: BaseViewController {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                         heightDimension: .absolute(200))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                          heightDimension: .absolute(200))
@@ -30,12 +30,12 @@ final class HomeViewController: BaseViewController {
                 return section
             } else {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
-                                                        heightDimension: .absolute(150))
+                                                        heightDimension: .absolute(200))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                         heightDimension: .absolute(150))
+                                                         heightDimension: .absolute(200))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 return section
@@ -49,10 +49,6 @@ final class HomeViewController: BaseViewController {
         collectionView.register(StandardProductCell.self, forCellWithReuseIdentifier: StandardProductCell.reuseIdentifier)
         
         collectionView.dataSource = self
-        if let tabBarHeight = tabBarController?.tabBar.frame.height {
-                    collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: tabBarHeight, right: 0)
-                    collectionView.scrollIndicatorInsets = collectionView.contentInset
-        }
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
@@ -100,7 +96,7 @@ extension HomeViewController {
         ])
     }
     private func connectToViewModel() {
-        subscribe(observable: viewModel.fetchProductsObservable) { [weak self] _ in
+        subscribe(observable: viewModel.getProductsObservable) { [weak self] _ in
             guard let self else {
                 return
             }
@@ -113,7 +109,9 @@ extension HomeViewController {
     
     @objc
     private func didTapRightBarButton() {
-        coordinator.presentViewController(from: self, to: CategoriesViewController.self)
+        coordinator.presentViewController(from: self, to: CategoriesViewController.self) { delegate in
+            delegate.delegate = self
+        }
     }
 }
 
@@ -143,6 +141,12 @@ extension HomeViewController: UICollectionViewDataSource {
             cell.configure(with: viewModel.getProduct(at: indexPath))
             return cell
         }
+    }
+}
+
+extension HomeViewController: CategorySelectionDelegate {
+    func didSelectCategory(_ category: String) {
+        viewModel.fetchProductsBy(category: category)
     }
 }
 

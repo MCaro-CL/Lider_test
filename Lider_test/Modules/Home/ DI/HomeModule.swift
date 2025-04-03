@@ -53,8 +53,8 @@ extension HomeModule {
         }
         
         // MARK: Register Use Cases
-        container.register(FetchProductsUseCase.self) { resolve in
-            FetchProductsUseCase(
+        container.register(GetProductsUseCase.self) { resolve in
+            GetProductsUseCase(
                 repository: resolve.resolve(HomeRepository.self),
                 mapper: resolve.resolve(HomeDomainMapper.self)
             )
@@ -69,13 +69,21 @@ extension HomeModule {
         container.register(SelectCategoryUseCase.self) { _ in
             SelectCategoryUseCase()
         }
+        
+        container.register(FetchProductByCategoryUseCase.self) { resolve in
+            FetchProductByCategoryUseCase(
+                repository: resolve.resolve(HomeRepository.self),
+                mapper: resolve.resolve(HomeDomainMapper.self)
+            )
+        }
     }
     
     private func registerPresentationLayer() {
         // MARK: Register ViewModels
         container.register(HomeViewModel.self) { resolve in
             HomeViewModel(
-                fetchProductsUseCase: resolve.resolve(FetchProductsUseCase.self)
+                getProductsUseCase: resolve.resolve(GetProductsUseCase.self),
+                fetchProductByCategoryUseCase: resolve.resolve(FetchProductByCategoryUseCase.self)
             )
         }
         

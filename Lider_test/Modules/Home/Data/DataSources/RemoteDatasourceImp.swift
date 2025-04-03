@@ -53,7 +53,7 @@ struct RemoteDatasourceImp: RemoteDatasource {
     
     func getProducts(by category: String) async -> Result<[ProductDTO], HTTPError> {
         let request = APIRequest(
-            baseUrl: baseURL + "/products/categories/\(category)",
+            baseUrl: baseURL + "/products/category/\(category)",
             method: .get,
             responseType: [ProductDTO].self
         )

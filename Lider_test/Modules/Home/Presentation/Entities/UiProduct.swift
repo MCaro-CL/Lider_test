@@ -5,7 +5,7 @@
 //  Created by Mauricio Caro Caro on 02-04-25.
 //
 
-import Foundation
+import UIKit
 
 struct UiProduct {
     var id: Int
