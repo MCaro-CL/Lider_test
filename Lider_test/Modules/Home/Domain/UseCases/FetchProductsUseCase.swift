@@ -1,0 +1,27 @@
+//
+//  FetchProductsUseCase.swift
+//  Lider_test
+//
+//  Created by Mauricio Caro Caro on 02-04-25.
+//
+
+import Foundation
+
+struct FetchProductsUseCase {
+    private let repository: HomeRepository
+    private let mapper: HomeDomainMapper
+    
+    init(repository: HomeRepository, mapper: HomeDomainMapper) {
+        self.repository = repository
+        self.mapper = mapper
+    }
+    
+    func execute() async -> Result<[UiProduct], HTTPError> {
+        switch await repository.fetchProducts() {
+            case .success(let success):
+                    .success(mapper.domainToPresentation(success))
+            case .failure(let failure):
+                    .failure(failure)
+        }
+    }
+}
