@@ -1,5 +1,5 @@
 //
-//  HomeDatasource.swift
+//  ProductDatasource.swift
 //  Lider_test
 //
 //  Created by Mauricio Caro Caro on 02-04-25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol HomeDatasource {
+protocol ProductDatasource {
     func fetchProducts() async -> Result<[Product], HTTPError>
     func getCategories() async -> Result<[String], HTTPError>
     func getProducts(by category: String) async -> Result<[Product], HTTPError>

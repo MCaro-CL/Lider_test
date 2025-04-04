@@ -34,6 +34,7 @@ final class Injection {
     func injectModule() {
         MainModule(container).inject()
         HomeModule(container).inject()
+        CartModule(container).inject()
     }
 }
 extension Resolver {

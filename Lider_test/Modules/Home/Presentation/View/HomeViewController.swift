@@ -81,7 +81,7 @@ extension HomeViewController {
         setupConstraints()
         connectToViewModel()
         viewModel.onSetupUI()
-        title = "My super App"
+        title = NSLocalizedString("HOME_TITLE", comment: "")
     }
     private func addInheritance() {
         

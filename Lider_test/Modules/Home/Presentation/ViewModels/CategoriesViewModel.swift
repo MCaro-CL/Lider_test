@@ -16,15 +16,9 @@ final class CategoriesViewModel {
     var getCategoriesObservable: Observable<Result<(), HTTPError>> {
         return getCategoriesNotification.asObservable()
     }
-    private let selectCategory: SelectCategoryUseCase
-    private let selectCategoryNotification = PublishSubject<()>()
-    var selectCategoryObservable: Observable<Void> {
-        return selectCategoryNotification.asObservable()
-    }
     
-    init(getCategoriesUseCase: GetCategoriesUseCase, selectCategory: SelectCategoryUseCase) {
+    init(getCategoriesUseCase: GetCategoriesUseCase) {
         self.getCategoriesUseCase = getCategoriesUseCase
-        self.selectCategory = selectCategory
     }
     
     func onSetupView() {
@@ -45,9 +39,5 @@ final class CategoriesViewModel {
     }
     func getCategory(at: IndexPath) -> String {
         return categories[at.row]
-    }
-    func didTapOnCategory(at: IndexPath) {
-        selectCategory.execute(category: categories[at.row])
-        selectCategoryNotification.onNext(())
     }
 }

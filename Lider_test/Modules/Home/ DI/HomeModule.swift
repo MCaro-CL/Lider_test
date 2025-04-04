@@ -24,26 +24,7 @@ final class HomeModule {
 
 extension HomeModule {
     private func registerDataLayer() {
-        //MARK: Register Datasource
-        container.register(RemoteDatasource.self) { resolve in
-            RemoteDatasourceImp(
-                networking: resolve.resolve(NetworkingManager.self)
-            )
-        }
         
-        //MARK: Register HomeDataMapper
-        container.register(HomeDataMapper.self) { _ in
-            HomeDataMapperImp()
-        }
-        
-        //MARK: Register repository
-        container.register(HomeRepository.self) { resolve in
-            HomeRepository(
-                remoteDataSource: resolve.resolve(RemoteDatasource.self),
-                mapper: resolve.resolve(HomeDataMapper.self)
-            )
-            
-        }
     }
     
     private func registerDomainLayer() {
@@ -55,24 +36,20 @@ extension HomeModule {
         // MARK: Register Use Cases
         container.register(GetProductsUseCase.self) { resolve in
             GetProductsUseCase(
-                repository: resolve.resolve(HomeRepository.self),
+                repository: resolve.resolve(ProductRepository.self),
                 mapper: resolve.resolve(HomeDomainMapper.self)
             )
         }
         
         container.register(GetCategoriesUseCase.self) { resolve in
             GetCategoriesUseCase(
-                repository: resolve.resolve(HomeRepository.self)
+                repository: resolve.resolve(ProductRepository.self)
             )
-        }
-        
-        container.register(SelectCategoryUseCase.self) { _ in
-            SelectCategoryUseCase()
         }
         
         container.register(FetchProductByCategoryUseCase.self) { resolve in
             FetchProductByCategoryUseCase(
-                repository: resolve.resolve(HomeRepository.self),
+                repository: resolve.resolve(ProductRepository.self),
                 mapper: resolve.resolve(HomeDomainMapper.self)
             )
         }
@@ -89,8 +66,7 @@ extension HomeModule {
         
         container.register(CategoriesViewModel.self) { resolve in
             CategoriesViewModel(
-                getCategoriesUseCase: resolve.resolve(GetCategoriesUseCase.self),
-                selectCategory: resolve.resolve(SelectCategoryUseCase.self)
+                getCategoriesUseCase: resolve.resolve(GetCategoriesUseCase.self)
             )
         }
         

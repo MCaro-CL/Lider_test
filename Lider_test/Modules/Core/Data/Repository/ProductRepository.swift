@@ -1,5 +1,5 @@
 //
-//  HomeRepository.swift
+//  ProductRepository.swift
 //  Lider_test
 //
 //  Created by Mauricio Caro Caro on 02-04-25.
@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct HomeRepository: HomeDatasource {
+struct ProductRepository: ProductDatasource {
     private let remoteDataSource: RemoteDatasource
-    private let mapper: HomeDataMapper
+    private let mapper: ProductDataMapper
     
-    init(remoteDataSource: RemoteDatasource, mapper: HomeDataMapper) {
+    init(remoteDataSource: RemoteDatasource, mapper: ProductDataMapper) {
         self.remoteDataSource = remoteDataSource
         self.mapper = mapper
     }

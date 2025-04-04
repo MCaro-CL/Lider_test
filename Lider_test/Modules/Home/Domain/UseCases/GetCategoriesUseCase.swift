@@ -8,9 +8,9 @@
 import Foundation
 
 struct GetCategoriesUseCase {
-    private let repository: HomeRepository
+    private let repository: ProductRepository
     
-    init(repository: HomeRepository) {
+    init(repository: ProductRepository) {
         self.repository = repository
     }
     

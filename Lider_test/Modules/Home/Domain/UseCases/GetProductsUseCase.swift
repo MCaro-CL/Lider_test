@@ -8,10 +8,10 @@
 import Foundation
 
 struct GetProductsUseCase {
-    private let repository: HomeRepository
+    private let repository: ProductRepository
     private let mapper: HomeDomainMapper
     
-    init(repository: HomeRepository, mapper: HomeDomainMapper) {
+    init(repository: ProductRepository, mapper: HomeDomainMapper) {
         self.repository = repository
         self.mapper = mapper
     }

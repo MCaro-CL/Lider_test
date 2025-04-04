@@ -32,10 +32,18 @@ fileprivate extension MainTabController{
             icon: UIImage(systemName: "house.circle.fill"),
             navBar: true
         )
-        self.viewControllers = [home]
-        self.tabBar.barStyle = .black
-        self.tabBar.tintColor = .white
-        tabBar.isTranslucent = false
+        let cart = create(
+            controller: container.resolve(CartViewController.self),
+            title: NSLocalizedString("GENERAL_CART", comment: ""),
+            icon: UIImage(systemName: "cart"),
+            navBar: true
+        )
+        self.viewControllers = [home, cart]
+        
+        NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(handleUpdateBadgeNotification(_:)),
+                                                       name: NSNotification.Name("updateNumberProductOnCart"),
+                                                       object: nil)
     }
     
     func create(controller: UIViewController, title:String, icon: UIImage?, navBar:Bool = false)-> UIViewController{
@@ -53,4 +61,14 @@ fileprivate extension MainTabController{
         }
         
     }
+    
+    @objc func handleUpdateBadgeNotification(_ notification: Notification) {
+            // Extraer el valor enviado en el objeto de la notificación.
+            if let count = notification.object as? Int {
+                // Asumimos que el Cart está en la posición 1 del array de viewControllers.
+                if let cartController = self.viewControllers?[1] {
+                    cartController.tabBarItem.badgeValue = count > 0 ? "\(count)" : nil
+                }
+            }
+        }
 }

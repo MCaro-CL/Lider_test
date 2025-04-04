@@ -10,8 +10,8 @@ import UIKit
 final class ResumeCartView: UIView {
     private lazy var totalLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = .systemFont(ofSize: 30, weight: .light, width: .compressed)
-        lbl.textColor = .label
+        lbl.font = .systemFont(ofSize: 30, weight: .bold)
+        lbl.textColor = .black
         lbl.textAlignment = .left
         lbl.numberOfLines = 1
         lbl.minimumScaleFactor = 0.5
@@ -26,12 +26,14 @@ final class ResumeCartView: UIView {
         btn.setTitleColor(.white, for: .normal)
         btn.backgroundColor = .systemBlue
         btn.layer.cornerRadius = 8
+        btn.heightAnchor.constraint(equalToConstant: 56).isActive = true
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(frame: .zero)
+        setupUI()
     }
 
     required init?(coder: NSCoder) {
@@ -45,8 +47,17 @@ final class ResumeCartView: UIView {
 
 extension ResumeCartView {
     private func setupUI() {
+        backgroundColor = .white
         addInheritance()
         setupConstraints()
+        layer.cornerRadius = 10
+        layer.borderWidth = 0.5
+        layer.borderColor = UIColor.systemGray.cgColor
+        layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        layer.shadowColor = UIColor.black.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: -2)
+        layer.shadowRadius = 1
+        layer.shadowOpacity = 0.3
     }
     private func addInheritance() {
         addSubview(totalLabel)
@@ -54,16 +65,15 @@ extension ResumeCartView {
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            totalLabel.topAnchor.constraint(equalTo: topAnchor, constant: 24),
+            totalLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             totalLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 16),
             totalLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -16)
         ])
         NSLayoutConstraint.activate([
-            purchaseButton.topAnchor.constraint(equalTo: totalLabel.bottomAnchor, constant: 32),
+            purchaseButton.topAnchor.constraint(equalTo: totalLabel.bottomAnchor, constant: 24),
             purchaseButton.leftAnchor.constraint(equalTo: leftAnchor, constant: 48),
             purchaseButton.rightAnchor.constraint(equalTo: rightAnchor, constant: -48),
-            purchaseButton.heightAnchor.constraint(equalToConstant: 56),
-            purchaseButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -32)
+            purchaseButton.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -24)
         ])
     }
 }

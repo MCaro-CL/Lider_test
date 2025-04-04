@@ -11,7 +11,8 @@ class StandardProductCell: UICollectionViewCell {
     
     private lazy var imageView: UIImageView = {
         let img = UIImageView()
-        img.contentMode = .scaleAspectFill
+        img.image = UIImage(systemName: "photo.on.rectangle.angled")
+        img.contentMode = .scaleAspectFit
         img.clipsToBounds = true
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
@@ -37,8 +38,10 @@ class StandardProductCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .systemGray5
+        contentView.backgroundColor = .white
         setupViews()
+        contentView.layer.cornerRadius = 10
+        contentView.layer.masksToBounds = true
     }
     
     required init?(coder: NSCoder) {

@@ -11,7 +11,11 @@ final class CartRepository {
     private static let _shared = CartRepository()
     public static var shared: CartRepository { _shared }
     
-    private var products: [Product] = []
+    private var products: [Product] = [] {
+        didSet {
+            NotificationCenter.default.post(name: NSNotification.Name("updateNumberProductOnCart"), object: self.products.count)
+        }
+    }
     
     func addProduct(_ product: Product) {
         products.append(product)
@@ -25,5 +29,4 @@ final class CartRepository {
     func deleterProduct(at index: Int) {
         products.remove(at: index)
     }
-    
 }

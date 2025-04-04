@@ -1,5 +1,5 @@
 //
-//  HomeDataMapperImp.swift
+//  ProductDataMapperImp.swift
 //  Lider_test
 //
 //  Created by Mauricio Caro Caro on 02-04-25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HomeDataMapperImp: HomeDataMapper {
+struct ProductDataMapperImp: ProductDataMapper {
     func dataToDomain(_ value: ProductDTO) -> Product {
         .init(
             id: value.id,
