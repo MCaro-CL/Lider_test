@@ -46,16 +46,12 @@ final class Coordinator{
         to type: T.Type,
         delegate: ((T) -> Void)? = nil
     ) {
-        // Se resuelve la instancia a través del contenedor de dependencias
         guard let viewController = container.resolve(T.self) else {
             assertionFailure("No se pudo resolver \(T.self)")
             return
         }
-        
-        // Ejecutar el bloque de configuración, si se proporciona
+        viewController.modalPresentationStyle = .fullScreen
         delegate?(viewController)
-        
-        // Realizar la presentación
         source.present(viewController, animated: true, completion: nil)
     }
 }

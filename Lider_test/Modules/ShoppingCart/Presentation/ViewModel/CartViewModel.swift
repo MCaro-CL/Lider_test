@@ -59,7 +59,7 @@ final class CartViewModel {
         cartProducts.count
     }
     func getProduct(at indexPath: IndexPath) -> UiProduct {
-        let sortedProducts = cartProducts.sorted { $0.id < $1.id }
+        let sortedProducts = Array(cartProducts)//.sorted { $0.id < $1.id }
         return sortedProducts[indexPath.row]
     }
     
@@ -70,6 +70,7 @@ final class CartViewModel {
     
     func addProductToCart(_ product: UiProduct) {
         addCartProductuseCase.execute(mapper.presentationToDomain(product))
+        
     }
     func deleteProductFromCart(_ product: UiProduct) {
         deleteCartProductUseCase.execute(mapper.presentationToDomain(product))

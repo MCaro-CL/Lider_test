@@ -59,14 +59,6 @@ final class HomeViewController: BaseViewController {
         super.init(coordinator: coordinator)
         setupUI()
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if let tabBarHeight = tabBarController?.tabBar.frame.height {
-            collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: tabBarHeight, right: 0)
-            collectionView.scrollIndicatorInsets = collectionView.contentInset
-        }
-    }
 
     @MainActor required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -135,7 +127,6 @@ extension HomeViewController {
 
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        // Se utiliza una sección para el producto destacado y otra para los productos estándar
         return 2
     }
     
@@ -155,7 +146,6 @@ extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelega
                 return cell
             }
         } else {
-            // Configuración de las celdas estándar
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StandardProductCell.reuseIdentifier, for: indexPath) as! StandardProductCell
             cell.configure(with: viewModel.getProduct(at: indexPath))
             cell.delegate = self
