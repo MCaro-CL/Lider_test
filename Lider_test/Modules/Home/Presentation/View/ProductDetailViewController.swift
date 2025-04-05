@@ -167,7 +167,24 @@ extension ProductDetailViewController {
                         self.productPriceLabel.text = "$ \(product.price)"
                         
                     case .failure(let error):
-                        debugPrint(error)
+                        DispatchQueue.main.async {
+                            let alert = UIAlertController(
+                                title: "Error al obtener detalles del producto",
+                                message: error.localizedDescription,
+                                preferredStyle: .alert
+                            )
+                            alert
+                                .addAction(
+                                    UIAlertAction(
+                                        title: "Volver al home",
+                                        style: .cancel,
+                                        handler: {[weak self] _ in
+                                self?.dismiss(animated: true)
+                            })
+)
+                            
+                            self.present(alert, animated: true)
+                        }
                 }
             }
         }
