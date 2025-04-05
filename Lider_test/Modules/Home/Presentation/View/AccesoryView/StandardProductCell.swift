@@ -41,7 +41,7 @@ class StandardProductCell: UICollectionViewCell {
     }()
     private lazy var addToCartButton: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setImage(UIImage(systemName: "plus.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.setImage(UIImage(systemName: "plus.circle")?.withRenderingMode(.alwaysTemplate), for: .normal)
         btn.backgroundColor = .white
         btn.widthAnchor.constraint(equalToConstant: 30).isActive = true
         btn.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -49,7 +49,7 @@ class StandardProductCell: UICollectionViewCell {
         btn.layer.masksToBounds = true
         btn.contentHorizontalAlignment = .fill
         btn.contentVerticalAlignment = .fill
-        btn.tintColor = .systemBlue
+        btn.tintColor = .trueBlue
         btn.addTarget(self, action: #selector(operationProduct), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
@@ -59,7 +59,7 @@ class StandardProductCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.backgroundColor = .white
         setupViews()
-        contentView.layer.cornerRadius = 10
+        contentView.layer.cornerRadius = 15
         contentView.layer.shadowColor = UIColor.black.cgColor
         contentView.layer.shadowOffset = CGSize(width: 1, height: 2)
         contentView.layer.cornerRadius = 8

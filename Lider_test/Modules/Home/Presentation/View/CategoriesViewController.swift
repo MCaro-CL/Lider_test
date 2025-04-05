@@ -24,12 +24,16 @@ final class CategoriesViewController: BaseViewController {
         return lbl
     }()
     
-    private lazy var closebutton: UIButton = {
+    private lazy var closeButton: UIButton = {
         let btn = UIButton(type: .system)
-        btn.setImage(.init(systemName: "x.circle.fill"), for: .normal)
-        btn.tintColor = .label
+        btn.setImage(UIImage(systemName: "x.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 29).isActive = true
+        btn.contentHorizontalAlignment = .fill
+        btn.contentVerticalAlignment = .fill
+        btn.tintColor = .lightGray
+        btn.addTarget(self, action: #selector(tapOnCloseButton), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
         return btn
     }()
     
@@ -37,6 +41,7 @@ final class CategoriesViewController: BaseViewController {
         let tableview = UITableView()
         tableview.register(CategoryCell.self, forCellReuseIdentifier: "CategoryCell")
         tableview.backgroundColor = .clear
+        tableview.separatorInset = .zero
         tableview.translatesAutoresizingMaskIntoConstraints = false
         tableview.delegate = self
         tableview.dataSource = self
@@ -64,22 +69,22 @@ extension CategoriesViewController {
     }
     private func addInheritance() {
         view.addSubview(titleLabel)
-        view.addSubview(closebutton)
+        view.addSubview(closeButton)
         view.addSubview(tableview)
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
             titleLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16),
         ])
         NSLayoutConstraint.activate([
-            closebutton.topAnchor.constraint(equalTo: titleLabel.topAnchor),
-            closebutton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16)
         ])
         NSLayoutConstraint.activate([
-            tableview.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 32),
+            tableview.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
             tableview.leftAnchor.constraint(equalTo: titleLabel.leftAnchor),
-            tableview.rightAnchor.constraint(equalTo: closebutton.rightAnchor),
+            tableview.rightAnchor.constraint(equalTo: closeButton.rightAnchor),
             tableview.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
@@ -93,7 +98,7 @@ extension CategoriesViewController {
         }
     }
     @objc
-    private func closeButtonTapped() {
+    private func tapOnCloseButton() {
         self.dismiss(animated: true)
     }
 }

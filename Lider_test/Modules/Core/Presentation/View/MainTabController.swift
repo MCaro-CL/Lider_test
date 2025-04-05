@@ -24,8 +24,9 @@ final class MainTabController: UITabBarController{
     }
 }
 // MARK: Private methods
-fileprivate extension MainTabController{
-    func setupUI(){
+extension MainTabController{
+    private func setupUI(){
+        customizerTabBar()
         let home = create(
             controller: container.resolve(HomeViewController.self),
             title: NSLocalizedString("GENERAL_HOME", comment: ""),
@@ -46,7 +47,7 @@ fileprivate extension MainTabController{
                                                object: nil)
     }
     
-    func create(controller: UIViewController, title:String, icon: UIImage?, navBar:Bool = false)-> UIViewController{
+    private func create(controller: UIViewController, title:String, icon: UIImage?, navBar:Bool = false)-> UIViewController{
         if navBar{
             let navBar = UINavigationController(rootViewController: controller)
             navBar.tabBarItem = UITabBarItem(title: title, image: icon, tag: 0)
@@ -62,7 +63,8 @@ fileprivate extension MainTabController{
         
     }
     
-    @objc func handleUpdateBadgeNotification(_ notification: Notification) {
+    @objc
+    private func handleUpdateBadgeNotification(_ notification: Notification) {
             // Extraer el valor enviado en el objeto de la notificación.
             if let count = notification.object as? Int {
                 // Asumimos que el Cart está en la posición 1 del array de viewControllers.
@@ -71,4 +73,16 @@ fileprivate extension MainTabController{
                 }
             }
         }
+    
+    private func customizerTabBar(){
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .trueBlue
+        
+        tabBar.standardAppearance = appearance
+        tabBar.scrollEdgeAppearance = tabBar.standardAppearance
+        
+        tabBar.tintColor = .white
+        tabBar.unselectedItemTintColor = .white.withAlphaComponent(1)
+    }
 }

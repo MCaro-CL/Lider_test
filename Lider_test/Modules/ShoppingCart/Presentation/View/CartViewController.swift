@@ -30,7 +30,6 @@ final class CartViewController: BaseViewController {
     
     private lazy var resumeView: ResumeCartView = {
         let resumeCartView = ResumeCartView()
-        resumeCartView.setAmount("Total a pagar $2300 CLP")
         resumeCartView.translatesAutoresizingMaskIntoConstraints = false
         return resumeCartView
     }()
@@ -95,7 +94,7 @@ extension CartViewController {
         subscribe(observable: viewModel.updatePriceObservable) { [weak self] price in
             guard let self, let price else {return}
             DispatchQueue.main.async {
-                self.resumeView.setAmount(String(format: "%.2f", price))
+                self.resumeView.setAmount(price)
             }
         }
     }
@@ -103,7 +102,7 @@ extension CartViewController {
     private func tapOnBackToHomeButtom() {
         guard let tabBarController = self.tabBarController else { return }
         UIView
-            .transition(with: tabBarController.view, duration: 0.2, options: [.transitionCrossDissolve], animations: {
+            .transition(with: tabBarController.view, duration: 0.3, options: [.transitionCrossDissolve], animations: {
                 self.resumeView.isHidden = true
                 tabBarController.selectedIndex = 0
             }, completion: nil)

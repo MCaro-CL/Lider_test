@@ -12,16 +12,19 @@ class FeaturedProductCell: UICollectionViewCell {
     weak var delegate: ProductCellDelegate?
     private lazy var imageView: UIImageView = {
         let img = UIImageView()
-        img.contentMode = .scaleAspectFit
-        img.clipsToBounds = true
+        img.contentMode = .scaleAspectFill
+        img.layer.cornerRadius = 30
+        img.layer.masksToBounds = true
         img.translatesAutoresizingMaskIntoConstraints = false
         return img
     }()
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textColor = .black
+        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .white
         label.numberOfLines = 0
+        label.minimumScaleFactor = 0.5
+        label.adjustsFontSizeToFitWidth = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,7 +32,7 @@ class FeaturedProductCell: UICollectionViewCell {
     private lazy var priceLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textColor = .darkGray
+        label.textColor = .init(white: 1, alpha: 0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -37,13 +40,13 @@ class FeaturedProductCell: UICollectionViewCell {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "plus.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
         btn.backgroundColor = .white
-        btn.widthAnchor.constraint(equalToConstant: 50).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
-        btn.layer.cornerRadius = 25
+        btn.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        btn.layer.cornerRadius = 20
         btn.layer.masksToBounds = true
         btn.contentHorizontalAlignment = .fill
         btn.contentVerticalAlignment = .fill
-        btn.tintColor = .systemBlue
+        btn.tintColor = .sparkYellow
         btn.addTarget(self, action: #selector(operationProduct), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
@@ -51,7 +54,9 @@ class FeaturedProductCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .systemYellow
+        contentView.backgroundColor = .trueBlue
+        contentView.layer.cornerRadius = 15
+        contentView.layer.masksToBounds = true
         setupViews()
     }
     
@@ -61,26 +66,32 @@ class FeaturedProductCell: UICollectionViewCell {
     
     private func setupViews() {
         contentView.addSubview(imageView)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(priceLabel)
         contentView.addSubview(addToCartButton)
+        contentView.addSubview(priceLabel)
+        contentView.addSubview(titleLabel)
+        
+        
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             imageView.rightAnchor.constraint(equalTo: contentView.centerXAnchor),
             imageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
             
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            titleLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8),
-            titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
-            
-            priceLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4),
-            priceLabel.leftAnchor.constraint(equalTo: titleLabel.leftAnchor),
-            priceLabel.rightAnchor.constraint(equalTo: titleLabel.rightAnchor),
-            
             addToCartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8),
-            addToCartButton.rightAnchor.constraint(equalTo: titleLabel.rightAnchor),
+            addToCartButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -4),
+            
+            priceLabel.bottomAnchor.constraint(lessThanOrEqualTo: addToCartButton.topAnchor),
+            priceLabel.rightAnchor.constraint(equalTo: addToCartButton.rightAnchor),
+            priceLabel.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8),
+            
+            
+            titleLabel.bottomAnchor.constraint(lessThanOrEqualTo: priceLabel.topAnchor, constant: -4),
+            titleLabel.leftAnchor.constraint(equalTo: priceLabel.leftAnchor),
+            titleLabel.rightAnchor.constraint(equalTo: priceLabel.rightAnchor),
+            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            
+            
         ])
     }
     

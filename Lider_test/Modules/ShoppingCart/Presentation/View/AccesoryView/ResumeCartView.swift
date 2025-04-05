@@ -24,9 +24,10 @@ final class ResumeCartView: UIView {
         let btn = UIButton()
         btn.setTitle(NSLocalizedString("RESUME_CARTVIEW_PURCHASE_BTN_TITLE", comment: ""), for: .normal)
         btn.setTitleColor(.white, for: .normal)
-        btn.backgroundColor = .systemBlue
-        btn.layer.cornerRadius = 8
-        btn.heightAnchor.constraint(equalToConstant: 56).isActive = true
+        btn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+        btn.backgroundColor = .trueBlue
+        btn.layer.cornerRadius = 15
+        btn.heightAnchor.constraint(equalToConstant: 48).isActive = true
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()
@@ -40,8 +41,13 @@ final class ResumeCartView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setAmount(_ amount: String) {
-        totalLabel.text = "\(NSLocalizedString("RESUMECARTVIEW_TOTAL_TITLE", comment: "")) \(amount) CLP"
+    func setAmount(_ amount: Double) {
+        if amount > 0 {
+            totalLabel.text = "\(NSLocalizedString("RESUMECARTVIEW_TOTAL_TITLE", comment: "")) \(String(format: "%.2f", amount)) CLP"
+        } else {
+            totalLabel.text = nil
+        }
+        
     }
 }
 

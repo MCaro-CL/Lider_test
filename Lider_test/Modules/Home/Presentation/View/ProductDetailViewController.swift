@@ -55,7 +55,7 @@ final class ProductDetailViewController: BaseViewController {
         btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
         btn.contentHorizontalAlignment = .fill
         btn.contentVerticalAlignment = .fill
-        btn.tintColor = .systemBlue
+        btn.tintColor = .trueBlue
         btn.addTarget(self, action: #selector(tapOnAddToCartButton), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
@@ -63,8 +63,8 @@ final class ProductDetailViewController: BaseViewController {
     private lazy var closeButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setImage(UIImage(systemName: "x.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        btn.widthAnchor.constraint(equalToConstant: 40).isActive = true
-        btn.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        btn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 29).isActive = true
         btn.contentHorizontalAlignment = .fill
         btn.contentVerticalAlignment = .fill
         btn.tintColor = .lightGray
@@ -122,7 +122,7 @@ extension ProductDetailViewController {
     }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16),
         ])
         NSLayoutConstraint.activate([

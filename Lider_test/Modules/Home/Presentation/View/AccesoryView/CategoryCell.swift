@@ -40,8 +40,8 @@ extension CategoryCell {
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 16),
-            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -16),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor),
+            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16)
         ])
     }
