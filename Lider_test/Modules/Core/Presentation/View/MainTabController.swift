@@ -65,9 +65,7 @@ extension MainTabController{
     
     @objc
     private func handleUpdateBadgeNotification(_ notification: Notification) {
-            // Extraer el valor enviado en el objeto de la notificación.
             if let count = notification.object as? Int {
-                // Asumimos que el Cart está en la posición 1 del array de viewControllers.
                 if let cartController = self.viewControllers?[1] {
                     cartController.tabBarItem.badgeValue = count > 0 ? "\(count)" : nil
                 }

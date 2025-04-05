@@ -191,7 +191,7 @@ extension ProductDetailViewController {
         
         subscribe(observable: viewModel.addToCartObservable) { _ in
             let generadorNotificacion = UINotificationFeedbackGenerator()
-            generadorNotificacion.notificationOccurred(.success) // O .warning, .error
+            generadorNotificacion.notificationOccurred(.success)
         }
     }
 }
