@@ -8,6 +8,8 @@ import UIKit
 
 class StandardProductCell: UICollectionViewCell {
     static let reuseIdentifier = "StandardProductCell"
+    private var product: UiProduct?
+    weak var delegate: ProductCellDelegate?
     
     private lazy var imageView: UIImageView = {
         let img = UIImageView()
@@ -24,6 +26,8 @@ class StandardProductCell: UICollectionViewCell {
         label.numberOfLines = 2
         label.minimumScaleFactor = 0.8
         label.adjustsFontSizeToFitWidth = true
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -35,13 +39,31 @@ class StandardProductCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    private lazy var addToCartButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setImage(UIImage(systemName: "plus.circle.fill")?.withRenderingMode(.alwaysTemplate), for: .normal)
+        btn.backgroundColor = .white
+        btn.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        btn.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        btn.layer.cornerRadius = 15
+        btn.layer.masksToBounds = true
+        btn.contentHorizontalAlignment = .fill
+        btn.contentVerticalAlignment = .fill
+        btn.tintColor = .systemBlue
+        btn.addTarget(self, action: #selector(operationProduct), for: .touchUpInside)
+        btn.translatesAutoresizingMaskIntoConstraints = false
+        return btn
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.backgroundColor = .white
         setupViews()
         contentView.layer.cornerRadius = 10
-        contentView.layer.masksToBounds = true
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOffset = CGSize(width: 1, height: 2)
+        contentView.layer.cornerRadius = 8
+        contentView.layer.shadowOpacity = 0.2
     }
     
     required init?(coder: NSCoder) {
@@ -49,34 +71,34 @@ class StandardProductCell: UICollectionViewCell {
     }
     
     private func setupViews() {
+        contentView.addSubview(addToCartButton)
+        NSLayoutConstraint.activate([
+            addToCartButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
+            addToCartButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2)
+        ])
         contentView.addSubview(priceLabel)
+        NSLayoutConstraint.activate([
+            priceLabel.centerYAnchor.constraint(equalTo: addToCartButton.centerYAnchor),
+            priceLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8)
+        ])
         contentView.addSubview(titleLabel)
+        NSLayoutConstraint.activate([
+            titleLabel.bottomAnchor.constraint(equalTo: addToCartButton.topAnchor, constant: -4),
+            titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
+            titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8)
+        ])
         contentView.addSubview(imageView)
-        
-        
-        
-        NSLayoutConstraint.activate([
-            priceLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
-            priceLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -2)
-        ])
-        NSLayoutConstraint.activate([
-            titleLabel.bottomAnchor.constraint(equalTo: priceLabel.topAnchor, constant: -4),
-            titleLabel.leftAnchor.constraint(equalTo: priceLabel.leftAnchor),
-            titleLabel.rightAnchor.constraint(equalTo: priceLabel.rightAnchor),
-        ])
-        
         NSLayoutConstraint.activate([
             imageView.bottomAnchor.constraint(equalTo: titleLabel.topAnchor, constant: -4),
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 8),
             imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -8),
-            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 4),
+            imageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 2),
         ])
     }
     
-    
     func configure(with product: UiProduct) {
         Task{
+            self.product = product
             imageView.image = await fetchProductImage(url: product.image)
             titleLabel.text = product.title
             priceLabel.text = "$\(product.price)"
@@ -90,8 +112,14 @@ class StandardProductCell: UICollectionViewCell {
         do {
             return try await ImageDownloader.shared.downloadImage(from: url)
         } catch {
-            print("Error al descargar la imagen: \(error.localizedDescription)")
+            debugPrint("Error al descargar la imagen: \(error.localizedDescription)")
             return nil
         }
+    }
+    
+    @objc
+    private func operationProduct() {
+        guard let product = product else { return }
+        delegate?.didTapPlusButton(product)
     }
 }

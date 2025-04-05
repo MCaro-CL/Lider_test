@@ -1,6 +1,38 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "CARTCELL_DELETE_PRODUCTS_BUTTON_TITLE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quitar"
+          }
+        }
+      }
+    },
+    "CARTVIEWCONTROLLER_BACK_TO_HOME_BTN_TITLE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Home"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        }
+      }
+    },
     "CATEGORIES_TITLE" : {
       "localizations" : {
         "en" : {
@@ -77,6 +109,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pagar"
+          }
+        }
+      }
+    },
+    "RESUMECARTVIEW_TOTAL_TITLE" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total amount: $"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total a pagar: $"
           }
         }
       }

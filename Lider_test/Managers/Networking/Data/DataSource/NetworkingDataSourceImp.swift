@@ -22,10 +22,6 @@ public struct NetworkingDataSourceImp: NetworkingDataSource {
         if let body = body {
             request.httpBody = body
         }
-//        print(request.url)
-//        print(request.httpBody?.toString())
-//        print(request.httpMethod)
-//        print(request.allHTTPHeaderFields)
         let response = try await session.data(for: request)
         return response
     }

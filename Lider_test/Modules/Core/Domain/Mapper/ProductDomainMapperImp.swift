@@ -1,5 +1,5 @@
     //
-    //  HomeDomainMapperImp.swift
+    //  ProductDomainMapper.swift
     //  Lider_test
     //
     //  Created by Mauricio Caro Caro on 02-04-25.
@@ -7,9 +7,10 @@
 
 import UIKit
 
-struct HomeDomainMapperImp: HomeDomainMapper {
+struct ProductDomainMapperImp: ProductDomainMapper {
     func domainToPresentation(_ value: Product) -> UiProduct {
         .init(
+            internalID: value.internalId,
             id: value.id,
             title: value.title,
             price: value.price,

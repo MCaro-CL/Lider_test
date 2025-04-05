@@ -41,9 +41,9 @@ fileprivate extension MainTabController{
         self.viewControllers = [home, cart]
         
         NotificationCenter.default.addObserver(self,
-                                                       selector: #selector(handleUpdateBadgeNotification(_:)),
-                                                       name: NSNotification.Name("updateNumberProductOnCart"),
-                                                       object: nil)
+                                               selector: #selector(handleUpdateBadgeNotification(_:)),
+                                               name: NSNotification.Name("updatedRepository"),
+                                               object: nil)
     }
     
     func create(controller: UIViewController, title:String, icon: UIImage?, navBar:Bool = false)-> UIViewController{

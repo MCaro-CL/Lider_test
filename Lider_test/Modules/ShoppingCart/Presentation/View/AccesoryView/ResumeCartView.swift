@@ -41,7 +41,7 @@ final class ResumeCartView: UIView {
     }
     
     func setAmount(_ amount: String) {
-        totalLabel.text = amount
+        totalLabel.text = "\(NSLocalizedString("RESUMECARTVIEW_TOTAL_TITLE", comment: "")) \(amount) CLP"
     }
 }
 

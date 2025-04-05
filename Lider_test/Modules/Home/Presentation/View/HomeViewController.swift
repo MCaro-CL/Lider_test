@@ -30,12 +30,12 @@ final class HomeViewController: BaseViewController {
                 return section
             } else {
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5),
-                                                        heightDimension: .absolute(200))
+                                                        heightDimension: .absolute(250))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 4, leading: 4, bottom: 4, trailing: 4)
                 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                         heightDimension: .absolute(200))
+                                                         heightDimension: .absolute(250))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 let section = NSCollectionLayoutSection(group: group)
                 return section
@@ -48,6 +48,7 @@ final class HomeViewController: BaseViewController {
         collectionView.register(FeaturedProductCell.self, forCellWithReuseIdentifier: FeaturedProductCell.reuseIdentifier)
         collectionView.register(StandardProductCell.self, forCellWithReuseIdentifier: StandardProductCell.reuseIdentifier)
         
+        collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
@@ -76,7 +77,7 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     private func setupUI() {
         view.backgroundColor = .customBackgrond
-        navigationItem.rightBarButtonItem = showCategoryButton
+        
         addInheritance()
         setupConstraints()
         connectToViewModel()
@@ -84,7 +85,7 @@ extension HomeViewController {
         title = NSLocalizedString("HOME_TITLE", comment: "")
     }
     private func addInheritance() {
-        
+        navigationItem.rightBarButtonItem = showCategoryButton
         view.addSubview(collectionView)
     }
     private func setupConstraints() {
@@ -96,14 +97,31 @@ extension HomeViewController {
         ])
     }
     private func connectToViewModel() {
-        subscribe(observable: viewModel.getProductsObservable) { [weak self] _ in
-            guard let self else {
+        subscribe(observable: viewModel.getProductsObservable) { [weak self] result in
+            guard let self, let result else {
                 return
             }
-            
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
+            switch result {
+                case .success(_):
+                    DispatchQueue.main.async {
+                        self.collectionView.reloadData()
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(
+                            title: "Error al cargar los productos",
+                            message: error.localizedDescription,
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: "Reintentar", style: .default, handler: { _ in
+                            self.viewModel.onSetupUI()
+                        }))
+                        alert.addAction(UIAlertAction(title: "Ok", style: .destructive))
+                        
+                        self.present(alert, animated: true)
+                    }
             }
+            
         }
     }
     
@@ -115,7 +133,7 @@ extension HomeViewController {
     }
 }
 
-extension HomeViewController: UICollectionViewDataSource {
+extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         // Se utiliza una sección para el producto destacado y otra para los productos estándar
         return 2
@@ -131,6 +149,7 @@ extension HomeViewController: UICollectionViewDataSource {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeaturedProductCell.reuseIdentifier, for: indexPath) as! FeaturedProductCell
             if let featuredProduct = self.viewModel.getFeaturedProduct() {
                 cell.configure(with: featuredProduct)
+                cell.delegate = self
                 return cell
             } else {
                 return cell
@@ -139,9 +158,16 @@ extension HomeViewController: UICollectionViewDataSource {
             // Configuración de las celdas estándar
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: StandardProductCell.reuseIdentifier, for: indexPath) as! StandardProductCell
             cell.configure(with: viewModel.getProduct(at: indexPath))
+            cell.delegate = self
             return cell
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let id = viewModel.getProduct(at: indexPath).id
+        coordinator.presentViewController(from: self, to: ProductDetailViewController.self, args: id)
+    }
+    
 }
 
 extension HomeViewController: CategorySelectionDelegate {
@@ -150,4 +176,8 @@ extension HomeViewController: CategorySelectionDelegate {
     }
 }
 
-
+extension HomeViewController: ProductCellDelegate {
+    func didTapPlusButton(_ product: UiProduct) {
+        viewModel.addProductToCart(product)
+    }
+}

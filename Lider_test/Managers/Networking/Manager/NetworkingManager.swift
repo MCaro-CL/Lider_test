@@ -62,7 +62,6 @@ extension NetworkingManager {
         guard let response = data.response as? HTTPURLResponse else {
             return .failure(.invalidResponse(data.data.toString() ?? "sin data response"))
         }
-//        print("status code: \(response.statusCode)/",data.data.toString())
         switch response.statusCode {
             case 200..<300:
                 if data.data.isEmpty {

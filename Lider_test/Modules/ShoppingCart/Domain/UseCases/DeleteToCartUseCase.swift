@@ -1,18 +1,18 @@
 //
-//  AddToCartUseCase.swift
+//  DeleteToCartUseCase.swift
 //  Lider_test
 //
-//  Created by Mauricio Caro Caro on 03-04-25.
+//  Created by Mauricio Caro Caro on 04-04-25.
 //
 
 import Foundation
 
-struct AddToCartUseCase {
+struct DeleteToCartUseCase {
     private let repository: CartRepository = CartRepository.shared
     
     init() {}
     
     func execute(_ product: Product) {
-        repository.addProduct(product)
+        repository.deleterProduct(product)
     }
 }

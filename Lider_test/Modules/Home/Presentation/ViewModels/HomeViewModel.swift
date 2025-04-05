@@ -11,8 +11,8 @@ import RxSwift
 
 final class HomeViewModel {
     private(set) var products: [UiProduct] = []
-    private(set) var filterProducts: [UiProduct] = []
     
+    private let mapper: ProductPresentationMapper
     private let getProductsUseCase: GetProductsUseCase
     private let getProductsNotification = PublishSubject<Result<(),Error>>()
     public var getProductsObservable: Observable<Result<(),Error>> {
@@ -20,13 +20,18 @@ final class HomeViewModel {
     }
     
     private let fetchProductByCategoryUseCase: FetchProductByCategoryUseCase
+    private let addCartProductuseCase: AddToCartUseCase
     
     init(
+        mapper: ProductPresentationMapper,
         getProductsUseCase: GetProductsUseCase,
-        fetchProductByCategoryUseCase: FetchProductByCategoryUseCase
+        fetchProductByCategoryUseCase: FetchProductByCategoryUseCase,
+        addCartProductuseCase: AddToCartUseCase
     ) {
+        self.mapper = mapper
         self.getProductsUseCase = getProductsUseCase
         self.fetchProductByCategoryUseCase = fetchProductByCategoryUseCase
+        self.addCartProductuseCase = addCartProductuseCase
     }
     
     func onSetupUI() {
@@ -34,7 +39,6 @@ final class HomeViewModel {
             switch await getProductsUseCase.execute() {
                 case .success(let products):
                     self.products = products
-                    self.filterProducts = products
                         self.getProductsNotification.onNext(.success(()))
 
                 case .failure(let error):
@@ -43,33 +47,36 @@ final class HomeViewModel {
         }
     }
     
+    func addProductToCart(_ product: UiProduct) {
+        addCartProductuseCase.execute(mapper.presentationToDomain(product))
+    }
+    
     func itemsOn(section: Int) -> Int {
         switch section {
             case 0:
-                return filterProducts.count > 0 ? 1 : 0
+                return products.count > 0 ? 1 : 0
             case 1:
-                return filterProducts.count > 1 ? filterProducts.count : 0
+                return products.count > 1 ? products.count : 0
             default:
                 return 0
         }
     }
     
     func getFeaturedProduct() -> UiProduct? {
-        return filterProducts.max(by: { $0.rating < $1.rating })
+        return products.max(by: { $0.rating < $1.rating })
     }
     
     func getProduct(at: IndexPath) -> UiProduct {
-        self.filterProducts[at.item]
+        self.products[at.item]
     }
     func fetchProductsBy(category: String) {
         if category == "Todos" {
-            filterProducts = products
-            getProductsNotification.onNext(.success(()))
+            self.onSetupUI()
         } else {
             Task{
                 switch await fetchProductByCategoryUseCase.execute(category: category) {
                     case .success(let success):
-                        self.filterProducts = success
+                        self.products = success
                         self.getProductsNotification.onNext(.success(()))
                     case .failure(let failure):
                         self.getProductsNotification.onNext(.failure(failure))

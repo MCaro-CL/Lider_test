@@ -10,6 +10,7 @@ import Foundation
 struct ProductDataMapperImp: ProductDataMapper {
     func dataToDomain(_ value: ProductDTO) -> Product {
         .init(
+            internalId: UUID(),
             id: value.id,
             title: value.title,
             price: value.price,

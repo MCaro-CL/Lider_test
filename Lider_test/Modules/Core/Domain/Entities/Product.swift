@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Product {
+struct Product: Hashable {
+    var internalId: UUID
     var id: Int
     var title: String
     var price: Double
@@ -15,4 +16,8 @@ struct Product {
     var category: String
     var image: String
     var rating: Double
+    
+    static func == (lhs: Product, rhs: Product) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

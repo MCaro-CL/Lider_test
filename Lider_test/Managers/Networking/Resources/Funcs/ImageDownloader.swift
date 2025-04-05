@@ -39,20 +39,16 @@ final class ImageDownloader {
     }
     
     func downloadImageSync(from url: URL) -> UIImage? {
-            // Revisar la caché para evitar descargas innecesarias.
             if let cachedImage = imageCache.object(forKey: url.absoluteString as NSString) {
                 return cachedImage
             }
-            
-            // Intentar descargar los datos de forma síncrona.
             do {
                 let data = try Data(contentsOf: url)
                 guard let image = UIImage(data: data) else {
-                    print("No se pudo convertir los datos en imagen.")
+                    debugPrint("No se pudo convertir los datos en imagen.")
                     return nil
                 }
                 
-                // Almacenar la imagen en caché.
                 imageCache.setObject(image, forKey: url.absoluteString as NSString)
                 return image
             } catch {

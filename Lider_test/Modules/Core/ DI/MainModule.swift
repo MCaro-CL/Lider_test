@@ -17,6 +17,7 @@ final class MainModule {
     
     func inject() {
         registerDataLayer()
+        registerDomainlayer()
         registerPresentationLayer()
     }
 }
@@ -44,8 +45,16 @@ extension MainModule {
             
         }
     }
+    private func registerDomainlayer() {
+        container.register(ProductDomainMapper.self) { _ in
+            ProductDomainMapperImp()
+        }
+    }
     
     private func registerPresentationLayer() {
+        container.register(ProductPresentationMapper.self) { _ in
+            ProductPresentationMapperImp()
+        }
         container.register(Coordinator.self) { _ in
             Coordinator(container: self.container)
         }
